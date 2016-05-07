@@ -8,8 +8,8 @@ var testDir = path.join(__dirname, '..')
 var testFile = 'tests.js'
 
 /**
- * Exports a function for each adapter that will run
- * against a default test fixture.
+ * Exports a function for each adapter that will run against a default
+ * test fixture.
  */
 module.exports = {
   Jasmine: function (attachListeners) {

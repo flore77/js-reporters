@@ -1,4 +1,5 @@
-/*global describe, it*/
+/* global describe, it */
+
 function assert (expr, msg) {
   if (!expr) {
     throw new Error(msg || 'failed')
@@ -24,6 +25,7 @@ describe('group b', function () {
     assert(true)
   })
 })
+
 describe('group with subgroup', function () {
   describe('subgroup', function () {
     it('subtest', function () {

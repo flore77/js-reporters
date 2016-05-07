@@ -1,4 +1,5 @@
-/*global describe, it, expect, xit*/
+/* global describe, it, expect, xit */
+
 describe('group a', function () {
   it('foo', function () {
     expect(5).toBe(5)
@@ -18,6 +19,7 @@ describe('group b', function () {
     expect(true).toBeTruthy()
   })
 })
+
 describe('group with subgroup', function () {
   describe('subgroup', function () {
     it('subtest', function () {
