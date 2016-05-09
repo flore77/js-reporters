@@ -1,18 +1,18 @@
-var Jasmine = require('jasmine')
-var QUnit = require('qunitjs')
+// var Jasmine = require('jasmine')
+// var QUnit = require('qunitjs')
 var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 var path = require('path')
 
 var testDir = path.join(__dirname, '..')
-var testFile = 'tests.js'
+// var testFile = 'tests.js'
 
 /**
  * Exports a function for each adapter that will run against a default
  * test fixture.
  */
 module.exports = {
-  Jasmine: function (attachListeners) {
+ /* Jasmine: function (attachListeners) {
     var jasmine = new Jasmine()
     var jasmineRunner
 
@@ -39,13 +39,13 @@ module.exports = {
     require(path.join(testDir, 'qunit', testFile))
 
     QUnit.load()
-  },
+  },*/
 
   Mocha: function (attachListeners) {
     var mocha = new Mocha()
     var mochaRunner
 
-    mocha.addFile(path.join(testDir, 'mocha', testFile))
+    mocha.addFile(path.join(testDir, 'fixtures', 'mocha.js'))
 
     mochaRunner = new JsReporters.MochaAdapter(mocha)
 
