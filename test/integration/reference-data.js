@@ -9,10 +9,10 @@ var passingTest1 = new Test('should pass', 'Suite with passing test', 'passed',
 var passingTest2 = new Test('should pass', 'Suite with tests', 'passed',
     0, [])
 
-var skippedTest1 = new Test('should fail', 'Suite with skipped test', 'skipped',
-    0, [])
-var skippedTest2 = new Test('should fail', 'Suite with tests', 'skipped',
-    0, [])
+var skippedTest1 = new Test('should skip', 'Suite with skipped test', 'skipped',
+    undefined, [])
+var skippedTest2 = new Test('should skip', 'Suite with tests', 'skipped',
+    undefined, [])
 
 var failingTest1 = new Test('should fail', 'Suite with failing test', 'failed',
     0, [])

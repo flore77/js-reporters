@@ -48,6 +48,7 @@ function _testTestOnStart(index) {
 }
 
 function _testTestOnEnd(index, statusMsg, errorMsg) {
+
   it('should have been emitted on testEnd event', function () {
     expect(collectedData[index][0]).to.be.equal('testEnd')
   })
@@ -67,10 +68,17 @@ function _testTestOnEnd(index, statusMsg, errorMsg) {
       .equal(refData[index][1].status)
   })
 
-  it('should contain its runtime', function () {
-    expect(collectedData[index][1].runtime).to.be
-      .closeTo(refData[index][1].runtime, 1)
-  })
+  if (statusMsg === 'skipped') {
+    it ('should have no runtime', function() {
+      expect(collectedData[index][1].runtime).to.be
+        .equal(refData[index][1].runtime)
+    })
+  } else {
+    it('should contain its runtime', function () {
+      expect(collectedData[index][1].runtime).to.be
+        .closeTo(refData[index][1].runtime, 1)
+    })
+  }
 
   it('should have ' + errorMsg, function () {
     expect(collectedData[index][1].errors).to.be.deep
@@ -146,6 +154,19 @@ describe('Adapters integration', function () {
           _testTestOnEnd(5, 'passed', 'no errors')
         })
       })
+
+      describe('Suite with only one skipped test', function () {
+        _testSimpleSuite(7)
+
+        describe('Skipped test on start', function () {
+          _testTestOnStart(8)
+        })
+
+        describe('Skipped test on end', function () {
+          _testTestOnEnd(9, 'skipped', 'no errors')
+        })
+      })
+
     })
   })
 })
