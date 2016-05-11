@@ -26,7 +26,7 @@ function _attachListeners (done, runner) {
   runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done))
 }
 
-function _testTestOnStart(index) {
+function _testTestOnStart (index) {
   it('should have been emitted on testStart event', function () {
     expect(collectedData[index][0]).to.be.equal('testStart')
   })
@@ -47,8 +47,7 @@ function _testTestOnStart(index) {
   })
 }
 
-function _testTestOnEnd(index, statusMsg, errorMsg) {
-
+function _testTestOnEnd (index, statusMsg, errorMsg) {
   it('should have been emitted on testEnd event', function () {
     expect(collectedData[index][0]).to.be.equal('testEnd')
   })
@@ -69,7 +68,7 @@ function _testTestOnEnd(index, statusMsg, errorMsg) {
   })
 
   if (statusMsg === 'skipped') {
-    it ('should have no runtime', function() {
+    it('should have no runtime', function () {
       expect(collectedData[index][1].runtime).to.be
         .equal(refData[index][1].runtime)
     })
@@ -86,8 +85,8 @@ function _testTestOnEnd(index, statusMsg, errorMsg) {
   })
 }
 
-function _testSimpleSuite(index) {
- it('should have no other child suites', function () {
+function _testSimpleSuite (index) {
+  it('should have no other child suites', function () {
     expect(collectedData[index][1].childSuites).to.have
       .lengthOf(refData[index][1].childSuites.length)
   })
@@ -98,8 +97,8 @@ function _testSimpleSuite(index) {
   })
 }
 
-function _testComplexSuite(index) {
- it('should have no other child suites', function () {
+function _testComplexSuite (index) {
+  it('should have no other child suites', function () {
     expect(collectedData[index][1].childSuites).to.have
       .lengthOf(refData[index][1].childSuites.length)
   })
@@ -110,14 +109,27 @@ function _testComplexSuite(index) {
   })
 }
 
+function _testNestedSuite (index) {
+  it('should have one child suite', function () {
+    expect(collectedData[index][1].childSuites).to.have
+      .lengthOf(refData[index][1].childSuites.length)
+  })
+
+  it('should contain one test', function () {
+    expect(collectedData[index][1].tests).to.have
+      .lengthOf(refData[index][1].tests.length)
+  })
+}
 
 /**
+ * @param index {Integer}
  * @param type {Char} - Describing what type of suite is under testing.
  *
- * s - simple suite with only one test and no other child suites
- * c - complex suites with multiple tests, but no other child.
+ * s - simple suite with only one test and no child suites.
+ * c - complex suite with multiple tests and no child suites.
+ * n - nested suite with one test and one child suite.
  */
-function _testSuite(index, type) {
+function _testSuite (index, type) {
   it('should be emitted on suiteStart event', function () {
     expect(collectedData[index][0]).to.be.equal('suiteStart')
   })
@@ -128,13 +140,17 @@ function _testSuite(index, type) {
   })
 
   switch (type) {
-    case 's':  {
+    case 's': {
       _testSimpleSuite(index)
       break
     }
     case 'c': {
       _testComplexSuite(index)
-      break;
+      break
+    }
+    case 'n': {
+      _testNestedSuite(index)
+      break
     }
   }
 }
@@ -170,7 +186,7 @@ describe('Adapters integration', function () {
           _testTestOnStart(1)
         })
 
-        describe('Global test on end', function() {
+        describe('Global test on end', function () {
           _testTestOnEnd(2, 'passed', 'no errors')
         })
       })
@@ -214,29 +230,54 @@ describe('Adapters integration', function () {
       describe('Suite with multiple tests', function () {
         _testSuite(15, 'c')
 
-        describe('Passing test on start', function() {
+        describe('Passing test on start', function () {
           _testTestOnStart(16)
         })
 
-        describe('Passing test on end', function() {
+        describe('Passing test on end', function () {
           _testTestOnEnd(17, 'passing', 'no errors')
         })
 
-
-        describe('Skipped test on start', function() {
+        describe('Skipped test on start', function () {
           _testTestOnStart(18)
         })
 
-        describe('Skipped test on end', function() {
+        describe('Skipped test on end', function () {
           _testTestOnEnd(19, 'skipped', 'no errors')
         })
 
-        describe('Failing test on start', function() {
+        describe('Failing test on start', function () {
           _testTestOnStart(20)
         })
 
-        describe('Failing test on end', function() {
+        describe('Failing test on end', function () {
           _testTestOnEnd(21, 'failing', 'errors')
+        })
+      })
+
+      describe('Nested suites', function () {
+        describe('Outter suite', function () {
+          _testSuite(23, 'n')
+
+          describe('Outter test on start', function () {
+            _testTestOnStart(24)
+          })
+
+          describe('Outter test on end', function () {
+            _testTestOnEnd(25, 'passing', 'no errors')
+          })
+        })
+
+        describe('Inner suite', function () {
+          _testSuite(26, 's')
+
+          describe('Inner test on start', function () {
+            _testTestOnStart(27)
+          })
+
+          describe('Inner test on end', function () {
+            _testTestOnEnd(28, 'passing', 'no errors')
+          })
         })
       })
     })

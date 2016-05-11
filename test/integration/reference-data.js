@@ -19,6 +19,9 @@ var failingTest1 = new Test('should fail', 'Suite with failing test', 'failed',
 var failingTest2 = new Test('should fail', 'Suite with tests', 'failed',
     0, [new Error('error')])
 
+var innerTest = new Test('inner test', 'Inner suite', 'passed', 0, [])
+var outterTest = new Test('outter test', 'Outter suite', 'passed', 0, [])
+
 var passingSuite = new Suite('Suite with passing test', [], [passingTest1])
 var skippedSuite = new Suite('Suite with skipped test', [], [skippedTest1])
 var failingSuite = new Suite('Suite with failing test', [], [failingTest1])
@@ -29,8 +32,8 @@ var testSuite = new Suite('Suite with tests', [], [
   failingTest2
 ])
 
-var innerSuite = new Suite('Inner suite', [], [])
-var outterSuite = new Suite('Outter suite', [innerSuite], [])
+var innerSuite = new Suite('Inner suite', [], [innerTest])
+var outterSuite = new Suite('Outter suite', [innerSuite], [outterTest])
 
 var globalSuite = new Suite(undefined, [
   passingSuite,
@@ -65,8 +68,12 @@ module.exports = [
   ['testEnd', failingTest2],
   ['suiteEnd', testSuite],
   ['suiteStart', outterSuite],
+  ['testStart', outterTest],
+  ['testEnd', outterTest],
   ['suiteStart', innerSuite],
+  ['testStart', innerTest],
+  ['testEnd', innerTest],
   ['suiteEnd', innerSuite],
-  ['outterSuite', outterSuite],
+  ['suiteEnd', outterSuite],
   ['runEnd', globalSuite]
 ]

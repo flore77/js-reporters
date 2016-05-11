@@ -38,8 +38,12 @@ describe('Suite with tests', function () {
 
 describe('Outter suite', function () {
   describe('Inner suite', function () {
-    it('nested test', function () {
+    it('inner test', function () {
 
     })
+  })
+
+  it('outter test', function () {
+
   })
 })
