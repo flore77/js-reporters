@@ -121,15 +121,7 @@ function _testNestedSuite (index) {
   })
 }
 
-/**
- * @param index {Integer}
- * @param type {Char} - Describing what type of suite is under testing.
- *
- * s - simple suite with only one test and no child suites.
- * c - complex suite with multiple tests and no child suites.
- * n - nested suite with one test and one child suite.
- */
-function _testSuite (index, type) {
+function _testSuite (index, testSpecificSuite) {
   it('should be emitted on suiteStart event', function () {
     expect(collectedData[index][0]).to.be.equal('suiteStart')
   })
@@ -139,20 +131,7 @@ function _testSuite (index, type) {
       .equal(refData[index][1].suiteName)
   })
 
-  switch (type) {
-    case 's': {
-      _testSimpleSuite(index)
-      break
-    }
-    case 'c': {
-      _testComplexSuite(index)
-      break
-    }
-    case 'n': {
-      _testNestedSuite(index)
-      break
-    }
-  }
+  testSpecificSuite(index)
 }
 
 describe('Adapters integration', function () {
@@ -192,7 +171,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one passing test', function () {
-        _testSuite(3, 's')
+        _testSuite(3, _testSimpleSuite.bind(null))
 
         describe('Passing test on start', function () {
           _testTestOnStart(4)
@@ -204,7 +183,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one skipped test', function () {
-        _testSuite(7, 's')
+        _testSuite(7, _testSimpleSuite.bind(null))
 
         describe('Skipped test on start', function () {
           _testTestOnStart(8)
@@ -216,7 +195,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one failing test', function () {
-        _testSimpleSuite(11, 's')
+        _testSimpleSuite(11, _testSimpleSuite.bind(null))
 
         describe('Failing test on start', function () {
           _testTestOnStart(12)
@@ -228,7 +207,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with multiple tests', function () {
-        _testSuite(15, 'c')
+        _testSuite(15, _testComplexSuite.bind(null))
 
         describe('Passing test on start', function () {
           _testTestOnStart(16)
@@ -257,7 +236,7 @@ describe('Adapters integration', function () {
 
       describe('Nested suites', function () {
         describe('Outter suite', function () {
-          _testSuite(23, 'n')
+          _testSuite(23, _testNestedSuite.bind(null))
 
           describe('Outter test on start', function () {
             _testTestOnStart(24)
@@ -269,7 +248,7 @@ describe('Adapters integration', function () {
         })
 
         describe('Inner suite', function () {
-          _testSuite(26, 's')
+          _testSuite(26, _testSimpleSuite.bind(null))
 
           describe('Inner test on start', function () {
             _testTestOnStart(27)
