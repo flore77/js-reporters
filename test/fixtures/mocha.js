@@ -1,24 +1,24 @@
 /* global describe, it */
 
-describe('suite with passing test', function () {
+describe('Suite with passing test', function () {
   it('should pass', function () {
 
   })
 })
 
-describe('suite with skipped test', function () {
+describe('Suite with skipped test', function () {
   it.skip('should skip', function () {
 
   })
 })
 
-describe('suite with failing test', function () {
+describe('Suite with failing test', function () {
   it('should fail', function () {
     throw new Error('error')
   })
 })
 
-describe('suite with tests', function () {
+describe('Suite with tests', function () {
   it('should pass', function () {
 
   })
@@ -32,8 +32,8 @@ describe('suite with tests', function () {
   })
 })
 
-describe('outter suite', function () {
-  describe('inner suite', function () {
+describe('Outter suite', function () {
+  describe('Inner suite', function () {
     it('nested test', function () {
 
     })
