@@ -2,6 +2,8 @@ var JsReporters = require('../../dist/js-reporters.js')
 var Suite = JsReporters.Suite
 var Test = JsReporters.Test
 
+var globalTest = new Test('global test', undefined, 'passed', 0, [])
+
 var passingTest1 = new Test('should pass', 'Suite with passing test', 'passed',
     0, [])
 var passingTest2 = new Test('should pass', 'Suite with tests', 'passed',
@@ -36,10 +38,12 @@ var globalSuite = new Suite(undefined, [
   failingSuite,
   testSuite,
   outterSuite
-])
+], [globalTest])
 
 module.exports = [
   ['runStart', globalSuite],
+  ['testStart', globalTest],
+  ['testEnd', globalTest],
   ['suiteStart', passingSuite],
   ['testStart', passingTest1],
   ['testEnd', passingTest1],

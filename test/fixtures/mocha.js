@@ -1,5 +1,9 @@
 /* global describe, it */
 
+it('global test', function () {
+
+})
+
 describe('Suite with passing test', function () {
   it('should pass', function () {
 
