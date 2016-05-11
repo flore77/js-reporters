@@ -26,6 +26,79 @@ function _attachListeners (done, runner) {
   runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done))
 }
 
+function _testTestOnStart(index) {
+  it('should have been emitted on testStart event', function () {
+    expect(collectedData[index][0]).to.be.equal('testStart')
+  })
+
+  it('should have a name', function () {
+    expect(collectedData[index][1].testName).to.be
+      .equal(refData[index][1].testName)
+  })
+
+  it('should contain the name of the parent suite', function () {
+    expect(collectedData[index][1].suiteName).to.be
+      .equal(refData[index][1].suiteName)
+  })
+
+  it('should have only 2 props: testName and suiteName', function () {
+    expect(collectedData[index][1]).to.have.all
+      .keys(['testName', 'suiteName'])
+  })
+}
+
+function _testTestOnEnd(index, statusMsg, errorMsg) {
+  it('should have been emitted on testEnd event', function () {
+    expect(collectedData[index][0]).to.be.equal('testEnd')
+  })
+
+  it('should have the same name as on start', function () {
+    expect(collectedData[index][1].testName).to.be
+      .equal(refData[index][1].testName)
+  })
+
+  it('should contain the name of the suite parent', function () {
+    expect(collectedData[index][1].suiteName).to.be
+      .equal(refData[index][1].suiteName)
+  })
+
+  it('should contain status as ' + statusMsg, function () {
+    expect(collectedData[index][1].status).to.be
+      .equal(refData[index][1].status)
+  })
+
+  it('should contain its runtime', function () {
+    expect(collectedData[index][1].runtime).to.be
+      .closeTo(refData[index][1].runtime, 1)
+  })
+
+  it('should have ' + errorMsg, function () {
+    expect(collectedData[index][1].errors).to.be.deep
+      .equal(refData[index][1].errors)
+  })
+}
+
+function _testSimpleSuite(index) {
+  it('should be emitted on suiteStart event', function () {
+    expect(collectedData[index][0]).to.be.equal('suiteStart')
+  })
+
+  it('should have a name', function () {
+    expect(collectedData[index][1].suiteName).to.be
+      .equal(refData[index][1].suiteName)
+  })
+
+  it('should have no other child suites', function () {
+    expect(collectedData[index][1].childSuites).to.have
+      .lengthOf(refData[index][1].childSuites.length)
+  })
+
+  it('should contain only one test', function () {
+    expect(collectedData[index][1].tests).to.have
+      .lengthOf(refData[index][1].tests.length)
+  })
+}
+
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
@@ -53,84 +126,24 @@ describe('Adapters integration', function () {
             .lengthOf(refData[0][1].tests.length)
         })
 
-        describe('Global test', function () {
-          it('should have no parent suite', function () {
-            expect(collectedData[1][1].suiteName).to.be
-              .equal(refData[1][1].suiteName)
-          })
+        describe('Global test on start', function () {
+          _testTestOnStart(1)
+        })
+
+        describe('Global test on end', function() {
+          _testTestOnEnd(2, 'passed', 'no errors')
         })
       })
 
       describe('Suite with only one passing test', function () {
-        it('should be emitted on suiteStart event', function () {
-          expect(collectedData[3][0]).to.be.equal('suiteStart')
+        _testSimpleSuite(3)
+
+        describe('Passing test on start', function () {
+          _testTestOnStart(4)
         })
 
-        it('should have a name', function () {
-          expect(collectedData[3][1].suiteName).to.be
-            .equal(refData[3][1].suiteName)
-        })
-
-        it('should have no other child suites', function () {
-          expect(collectedData[3][1].childSuites).to.have
-            .lengthOf(refData[3][1].childSuites.length)
-        })
-
-        it('should contain only one test', function () {
-          expect(collectedData[3][1].tests).to.have
-            .lengthOf(refData[3][1].tests.length)
-        })
-
-        describe('Test on start', function () {
-          it('should have been emitted on testStart event', function () {
-            expect(collectedData[4][0]).to.be.equal('testStart')
-          })
-
-          it('should have a name', function () {
-            expect(collectedData[4][1].testName).to.be
-              .equal(refData[4][1].testName)
-          })
-
-          it('should contain the name of the suite parent', function () {
-            expect(collectedData[4][1].suiteName).to.be
-              .equal(refData[4][1].suiteName)
-          })
-
-          it('should have only 2 props: testName and suiteName', function () {
-            expect(collectedData[4][1]).to.have.all
-              .keys(['testName', 'suiteName'])
-          })
-        })
-
-        describe('Test on end', function () {
-          it('should have been emitted on testEnd event', function () {
-            expect(collectedData[5][0]).to.be.equal('testEnd')
-          })
-
-          it('should have the same name as on start', function () {
-            expect(collectedData[5][1].testName).to.be
-              .equal(refData[5][1].testName)
-          })
-
-          it('should contain the name of the suite parent', function () {
-            expect(collectedData[5][1].suiteName).to.be
-              .equal(refData[5][1].suiteName)
-          })
-
-          it('should contain status as passed', function () {
-            expect(collectedData[5][1].status).to.be
-              .equal(refData[5][1].status)
-          })
-
-          it('should contain its runtime', function () {
-            expect(collectedData[5][1].runtime).to.be
-              .closeTo(refData[5][1].runtime, 1)
-          })
-
-          it('should have no errors', function () {
-            expect(collectedData[5][1].errors).to.be.deep
-              .equal(refData[5][1].errors)
-          })
+        describe('Passing test on end', function () {
+          _testTestOnEnd(5, 'passed', 'no errors')
         })
       })
     })
