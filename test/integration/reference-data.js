@@ -15,9 +15,9 @@ var skippedTest2 = new Test('should skip', 'Suite with tests', 'skipped',
     undefined, [])
 
 var failingTest1 = new Test('should fail', 'Suite with failing test', 'failed',
-    0, [])
+    0, [new Error('error')])
 var failingTest2 = new Test('should fail', 'Suite with tests', 'failed',
-    0, [])
+    0, [new Error('error')])
 
 var passingSuite = new Suite('Suite with passing test', [], [passingTest1])
 var skippedSuite = new Suite('Suite with skipped test', [], [skippedTest1])

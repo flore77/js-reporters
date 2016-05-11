@@ -167,6 +167,17 @@ describe('Adapters integration', function () {
         })
       })
 
+      describe('Suite with only one failing test', function () {
+        _testSimpleSuite(11)
+
+        describe('Failing test on start', function () {
+          _testTestOnStart(12)
+        })
+
+        describe('Failing test on end', function () {
+          _testTestOnEnd(13, 'failing', 'errors')
+        })
+      })
     })
   })
 })
