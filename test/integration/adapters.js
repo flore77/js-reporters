@@ -87,6 +87,37 @@ function _testTestOnEnd(index, statusMsg, errorMsg) {
 }
 
 function _testSimpleSuite(index) {
+ it('should have no other child suites', function () {
+    expect(collectedData[index][1].childSuites).to.have
+      .lengthOf(refData[index][1].childSuites.length)
+  })
+
+  it('should contain only one test', function () {
+    expect(collectedData[index][1].tests).to.have
+      .lengthOf(refData[index][1].tests.length)
+  })
+}
+
+function _testComplexSuite(index) {
+ it('should have no other child suites', function () {
+    expect(collectedData[index][1].childSuites).to.have
+      .lengthOf(refData[index][1].childSuites.length)
+  })
+
+  it('should contain only multiple tests', function () {
+    expect(collectedData[index][1].tests).to.have
+      .lengthOf(refData[index][1].tests.length)
+  })
+}
+
+
+/**
+ * @param type {Char} - Describing what type of suite is under testing.
+ *
+ * s - simple suite with only one test and no other child suites
+ * c - complex suites with multiple tests, but no other child.
+ */
+function _testSuite(index, type) {
   it('should be emitted on suiteStart event', function () {
     expect(collectedData[index][0]).to.be.equal('suiteStart')
   })
@@ -96,15 +127,16 @@ function _testSimpleSuite(index) {
       .equal(refData[index][1].suiteName)
   })
 
-  it('should have no other child suites', function () {
-    expect(collectedData[index][1].childSuites).to.have
-      .lengthOf(refData[index][1].childSuites.length)
-  })
-
-  it('should contain only one test', function () {
-    expect(collectedData[index][1].tests).to.have
-      .lengthOf(refData[index][1].tests.length)
-  })
+  switch (type) {
+    case 's':  {
+      _testSimpleSuite(index)
+      break
+    }
+    case 'c': {
+      _testComplexSuite(index)
+      break;
+    }
+  }
 }
 
 describe('Adapters integration', function () {
@@ -144,7 +176,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one passing test', function () {
-        _testSimpleSuite(3)
+        _testSuite(3, 's')
 
         describe('Passing test on start', function () {
           _testTestOnStart(4)
@@ -156,7 +188,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one skipped test', function () {
-        _testSimpleSuite(7)
+        _testSuite(7, 's')
 
         describe('Skipped test on start', function () {
           _testTestOnStart(8)
@@ -168,7 +200,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one failing test', function () {
-        _testSimpleSuite(11)
+        _testSimpleSuite(11, 's')
 
         describe('Failing test on start', function () {
           _testTestOnStart(12)
@@ -176,6 +208,35 @@ describe('Adapters integration', function () {
 
         describe('Failing test on end', function () {
           _testTestOnEnd(13, 'failing', 'errors')
+        })
+      })
+
+      describe('Suite with multiple tests', function () {
+        _testSuite(15, 'c')
+
+        describe('Passing test on start', function() {
+          _testTestOnStart(16)
+        })
+
+        describe('Passing test on end', function() {
+          _testTestOnEnd(17, 'passing', 'no errors')
+        })
+
+
+        describe('Skipped test on start', function() {
+          _testTestOnStart(18)
+        })
+
+        describe('Skipped test on end', function() {
+          _testTestOnEnd(19, 'skipped', 'no errors')
+        })
+
+        describe('Failing test on start', function() {
+          _testTestOnStart(20)
+        })
+
+        describe('Failing test on end', function() {
+          _testTestOnEnd(21, 'failing', 'errors')
         })
       })
     })
