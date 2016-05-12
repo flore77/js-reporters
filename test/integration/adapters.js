@@ -171,7 +171,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one passing test', function () {
-        _testSuite(3, _testSimpleSuite.bind(null))
+        _testSuite(3, _testSimpleSuite)
 
         describe('Passing test on start', function () {
           _testTestOnStart(4)
@@ -183,7 +183,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one skipped test', function () {
-        _testSuite(7, _testSimpleSuite.bind(null))
+        _testSuite(7, _testSimpleSuite)
 
         describe('Skipped test on start', function () {
           _testTestOnStart(8)
@@ -195,7 +195,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with only one failing test', function () {
-        _testSimpleSuite(11, _testSimpleSuite.bind(null))
+        _testSimpleSuite(11, _testSimpleSuite)
 
         describe('Failing test on start', function () {
           _testTestOnStart(12)
@@ -207,7 +207,7 @@ describe('Adapters integration', function () {
       })
 
       describe('Suite with multiple tests', function () {
-        _testSuite(15, _testComplexSuite.bind(null))
+        _testSuite(15, _testComplexSuite)
 
         describe('Passing test on start', function () {
           _testTestOnStart(16)
@@ -236,7 +236,7 @@ describe('Adapters integration', function () {
 
       describe('Nested suites', function () {
         describe('Outter suite', function () {
-          _testSuite(23, _testNestedSuite.bind(null))
+          _testSuite(23, _testNestedSuite)
 
           describe('Outter test on start', function () {
             _testTestOnStart(24)
@@ -248,7 +248,7 @@ describe('Adapters integration', function () {
         })
 
         describe('Inner suite', function () {
-          _testSuite(26, _testSimpleSuite.bind(null))
+          _testSuite(26, _testSimpleSuite)
 
           describe('Inner test on start', function () {
             _testTestOnStart(27)
