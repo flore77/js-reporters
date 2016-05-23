@@ -1,4 +1,3 @@
-import QUnitAdapter from './lib/adapters/QUnitAdapter.js'
 import JasmineAdapter from './lib/adapters/JasmineAdapter.js'
 import MochaAdapter from './lib/adapters/MochaAdapter.js'
 import TapReporter from './lib/reporters/TapReporter.js'
